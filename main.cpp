@@ -1,8 +1,11 @@
 #include "ncmcrypt.h"
+#include "config.h"
 
 #include <stdexcept>
 
 int main(int argc, char *argv[]) {
+
+    path_type = 1;
 
 	if (argc <= 1) {
 		std::cout << "please input file path!" << std::endl;

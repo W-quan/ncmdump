@@ -2,6 +2,7 @@
 #include "aes.h"
 #include "base64.h"
 #include "cJSON.h"
+#include "config.h"
 
 #include <taglib/mpegfile.h>
 #include <taglib/flacfile.h>
@@ -53,8 +54,19 @@ static void replace(std::string& str, const std::string& from, const std::string
 
 static std::string fileNameWithoutExt(const std::string& str)
 {
+    using namespace std;
+
 	size_t lastPath = str.find_last_of("/\\");
-	std::string path = str.substr(lastPath+1);
+
+    string path;
+    if(path_type == 1){
+        // 生成文件放到在源文件目录
+        path = str;
+    } else {
+        // 生成文件放到当前目录下
+        path = str.substr(lastPath+1);
+    }
+
 	size_t lastExt = path.find_last_of(".");
 	return path.substr(0, lastExt);
 }
@@ -218,7 +230,9 @@ void NeteaseCrypt::FixMetadata() {
 		tag->setAlbum(TagLib::String(mMetaData->album(), TagLib::String::UTF8));
 	}
 
-	tag->setComment(TagLib::String("Create by netease copyright protected dump tool. author 5L", TagLib::String::UTF8));
+	//tag->setComment(TagLib::String("Create by netease copyright protected dump tool. author 5L\n", TagLib::String::UTF8));
+
+    tag->setComment(TagLib::String(m163key, TagLib::String::UTF8));
 
 	audioFile->save();
 }
@@ -344,6 +358,8 @@ NeteaseCrypt::NeteaseCrypt(std::string const& path) {
 		std::string swapModifyData;
 		std::string modifyOutData;
 		std::string modifyDecryptData;
+
+		m163key = std::string(modifyData, n);//patch from https://github.com/anonymous5l/ncmdump/pull/44/files
 
 		swapModifyData = std::string(modifyData + 22, n - 22);
 
