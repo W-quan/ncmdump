@@ -23,6 +23,11 @@ Android版本 [DroidNCM](https://github.com/bunnyblueair/DroidNCM)
 ## 使用
 	ncmdump [files]...
 
+批量：
+```shell
+find . -name '*.ncm' -exec {PATH}/ncmdump {} \;
+```
+
 ## 微信捐赠
 
 ![wechat-pay](https://raw.githubusercontent.com/anonymous5l/static-resoures/master/wechat-pay.png?raw=true)
